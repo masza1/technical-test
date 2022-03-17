@@ -1,0 +1,477 @@
+openapi: "1.0"
+info:
+  title: "Technical Test"
+  version: "1.0"
+  description: "API Documentation for Technical Test"
+  contact:
+    name: Mas Muhammadun Zahid
+    email: maszahid1@gmail.com
+externalDocs:
+  description: "GitHub Repository of Technical Test"
+  url: https://github.com/project-capstone
+tags:
+  - name: Authentication
+    description: Endpoint for verifying who a user is
+  - name: Sign Up
+    description: Endpoint for user registration
+  - name: Users
+    description: Endpoint for perform operations on user
+paths:
+  ####################################
+  #  AUTHENTICATION
+  ####################################
+  /login:
+    post:
+      tags:
+        - Authentication
+      summary: Get token for access to account
+      requestBody:
+        $ref: "#/components/requestBodies/requestBodyLogin"
+      responses:
+        "200":
+          $ref: "#/components/responses/loginSuccess"
+        "400":
+          $ref: "#/components/responses/loginFailed"
+  ####################################
+  #  USERS
+  ####################################
+  /users:
+    post:
+      tags:
+        - Sign Up
+      summary: Create user
+      requestBody:
+        $ref: "#/components/requestBodies/requestBodyUser"
+      responses:
+        "200":
+          $ref: "#/components/responses/successOperationNonData"
+        "400":
+          $ref: "#/components/responses/createUserFailed"
+    get:
+      tags:
+        - Users
+      summary: Get all users
+      responses:
+        "200":
+          $ref: "#/components/responses/getAllUsersSuccess"
+        "404":
+          $ref: "#/components/responses/dataNotFound"
+        "500":
+          $ref: "#/components/responses/internalServerError"
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get user by id
+      parameters:
+        - $ref: "#/components/parameters/idParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/getUserSuccess"
+        "404":
+          $ref: "#/components/responses/dataNotFound"
+        "500":
+          $ref: "#/components/responses/internalServerError"
+    put:
+      tags:
+        - Users
+      summary: Update user by id
+      security:
+        - JWTAuth: []
+      parameters:
+        - $ref: "#/components/parameters/idParam"
+      requestBody:
+        $ref: "#/components/requestBodies/requestBodyUserUpdate"
+      responses:
+        "200":
+          $ref: "#/components/responses/successOperationNonData"
+        "400":
+          $ref: "#/components/responses/updateUserFailed"
+        "401":
+          $ref: "#/components/responses/unAuthorized"
+        "404":
+          $ref: "#/components/responses/dataNotFound"
+    delete:
+      tags:
+        - Users
+      summary: Delete user by id
+      security:
+        - JWTAuth: []
+      parameters:
+        - $ref: "#/components/parameters/idParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/successOperationNonData"
+        "400":
+          $ref: "#/components/responses/deleteDataByIdFailed"
+        "401":
+          $ref: "#/components/responses/unAuthorized"
+        "500":
+          $ref: "#/components/responses/deleteInternalError"
+####################################
+#  COMPONENTS
+####################################
+components:
+  schemas:
+    requestDataLogin:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    requestDataUser:
+      type: object
+      required:
+        - username
+        - email
+        - address
+        - password
+      properties:
+        username:
+          type: string
+          minLength: 1
+          pattern: "^0-9A-Za-z_.$"
+        email:
+          type: string
+          format: email
+          minLength: 5
+          description: inputted email must be unique
+        address:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 6
+    responseLoginWithData:
+      type: object
+      properties:
+        Meta:
+          type: object
+          properties:
+            Code:
+              type: integer
+            Message:
+              type: string
+        Data:
+          type: object
+          properties:
+            Token:
+              type: string
+    responseUserWithData:
+      type: object
+      properties:
+        Meta:
+          type: object
+          properties:
+            Code:
+              type: integer
+            Message:
+              type: string
+        Data:
+          type: object
+          properties:
+            ID:
+              type: integer
+            Username:
+              type: string
+            Email:
+              type: string
+            Address:
+              type: string
+    responseUserWithDataArray:
+      type: object
+      properties:
+        Meta:
+          type: object
+          properties:
+            Code:
+              type: integer
+            Message:
+              type: string
+        Data:
+          type: array
+          items:
+            type: object
+            properties:
+              ID:
+                type: integer
+              Username:
+                type: string
+              Email:
+                type: string
+              Address:
+                type: string
+    responseNonData:
+      type: object
+      properties:
+        Meta:
+          type: object
+          properties:
+            Code:
+              type: integer
+            Message:
+              type: string
+  parameters:
+    idParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        example: 1
+    idUser:
+      name: id_user
+      in: path
+      required: true
+      schema:
+        type: integer
+        example: 1
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "use Token"
+  requestBodies:
+    requestBodyLogin:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/requestDataLogin"
+          examples:
+            User:
+              value:
+                username: sahril
+                password: sahril123
+        multipart/form-data:
+          schema:
+            $ref: "#/components/schemas/requestDataLogin"
+    requestBodyUser:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/requestDataUser"
+          examples:
+            newUser:
+              value:
+                username: sahril
+                email: sahril@example.com
+                address: sidoarjo
+                password: sahril123
+        multipart/form-data:
+          schema:
+            $ref: "#/components/schemas/requestDataUser"
+    requestBodyUserUpdate:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/requestDataUser"
+          examples:
+            newData:
+              value:
+                username: updateusername
+                email: sahril@update.com
+                address: surabaya
+                password: newpass
+        multipart/form-data:
+          schema:
+            $ref: "#/components/schemas/requestDataUser"
+  responses:
+    loginSuccess:
+      description: Success Response Data
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseLoginWithData"
+          examples:
+            User:
+              value:
+                Meta: { Code: 200, Message: login success }
+                Data:
+                  {
+                    Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2Mzk2OTAwMjMsInJvbGUiOiJhZG1pbiIsInVzZXJJZCI6NH0.1Ij1ZVqpqPDOVXzaXyqcyNMlnbLTfwD28Byv0aWNjAQ,
+                  }
+    loginFailed:
+      description: Bad Request Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            Login Failed:
+              $ref: "#/components/examples/loginFailed"
+            Invalid Data Request:
+              $ref: "#/components/examples/invalidDataRequest"
+            Data Can't be Empty:
+              $ref: "#/components/examples/dataCantEmpty"
+    successOperationNonData:
+      description: Success Response Non Data
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          example:
+            Meta: { Code: 200, Message: success operation }
+    createUserFailed:
+      description: Bad Request Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            Data Can't be Empty:
+              $ref: "#/components/examples/dataCantEmpty"
+            Invalid Data Request:
+              $ref: "#/components/examples/invalidDataRequest"
+            Username or Email Already Exist:
+              $ref: "#/components/examples/usernameOrEmailAlreadyExist"
+    getAllUsersSuccess:
+      description: Success Response Data
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseUserWithDataArray"
+          example:
+            Code: 200
+            Data:
+              [
+                {
+                  ID: 1,
+                  Username: try,
+                  Email: try@example.com,
+                  Address: "Sidoarjo",
+                },
+                {
+                  ID: 2,
+                  Username: test123,
+                  Email: test123@example.com,
+                  Address: "Bandung",
+                },
+                {
+                  ID: 3,
+                  Username: coba123,
+                  Email: coba123@example.com,
+                  Address: "Jakarta",
+                },
+              ]
+            Message: Success Operation
+    dataNotFound:
+      description: Data Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            Data Not Found:
+              $ref: "#/components/examples/dataNotFound"
+    internalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            Internal Server Error:
+              $ref: "#/components/examples/internalServerError"
+    getUserSuccess:
+      description: Success Response Data
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseUserWithData"
+          example:
+            Meta: { Code: 200, Message: success operation }
+            Data:
+              {
+                ID: 1,
+                Username: try,
+                Email: try@example.com,
+                Address: sidoarjo,
+              }
+    getDataByIdFailed:
+      description: Bad Request Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            Invalid Id:
+              $ref: "#/components/examples/invalidId"
+            Data Not Found:
+              $ref: "#/components/examples/dataNotFound"
+    deleteInternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            Internal Server Error:
+              $ref: "#/components/examples/deleteInternalError"
+    unAuthorized:
+      description: Access Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            Access Forbidden:
+              $ref: "#/components/examples/accessForbidden"
+    updateUserFailed:
+      description: Bad Request Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            Data Can't be Empty:
+              $ref: "#/components/examples/dataCantEmpty"
+            Invalid ID:
+              $ref: "#/components/examples/invalidId"
+            Invalid Data Request:
+              $ref: "#/components/examples/invalidDataRequest"
+            Username or Email Already Exist:
+              $ref: "#/components/examples/usernameOrEmailAlreadyExist"
+    deleteDataByIdFailed:
+      description: Bad Request Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            Invalid Id:
+              $ref: "#/components/examples/invalidId"
+            Data Not Found:
+              $ref: "#/components/examples/dataNotFound"
+  examples:
+    loginFailed:
+      value:
+        Meta: { Code: 400, Message: login failed }
+    invalidDataRequest:
+      value:
+        Meta: { Code: 400, Message: invalid data request }
+    dataCantEmpty:
+      value:
+        Meta: { Code: 400, Message: data can't be empty }
+    deleteInternalError:
+      value:
+        Meta: { Code: 500, Message: failed to delete user }
+    accessForbidden:
+      value:
+        Meta: { Code: 401, Message: access forbidden }
+    dataNotFound:
+      value:
+        Meta: { Code: 404, Message: user not found }
+    internalServerError:
+      value:
+        Meta: { Code: 500, Message: failed to get user }
+    usernameOrEmailAlreadyExist:
+      value:
+        Meta: { Code: 400, Message: username or email already exist }
+    invalidId:
+      value:
+        Meta: { Code: 400, Message: invalid id }
