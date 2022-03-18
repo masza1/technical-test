@@ -25,7 +25,11 @@ Route::group([
     'prefix' => 'auth'
 ], function ($router) {
     Route::get('login', function(){
-        return auth()->check() ? 'true' : 'Anda belum login';
+        if(auth()->check()){
+            return redirect()->to('api/auth/me');
+        }else{
+            return response()->json(['message' => 'Anda belum login!'], 403);
+        }
     })->name('login');
 
     Route::post('forgot-password', [ResetPasswordController::class, 'createLinkResetPassword']);

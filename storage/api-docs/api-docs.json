@@ -1,0 +1,616 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Technical Test ",
+        "description": "documentation for API Technical Test",
+        "contact": {
+            "email": "maszahid1@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost/technical-test/api",
+            "description": "Demo API Server"
+        }
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Endpoint ini untuk authentication login",
+                "operationId": "9bd34eaa85fa47cc53c314cf0b304b5a",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "email",
+                                        "example": "maszahid1@gmail.com"
+                                    },
+                                    "password": {
+                                        "description": "Minimal 7 karakte, harus terdapat huruf kecil dan besar, angka dan simbol",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "email": "ybrakus@example.net",
+                                    "password": "Password2!"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Akan memberikan token authentication, tipe token dan batas expired"
+                    },
+                    "422": {
+                        "description": "Some variable is required"
+                    },
+                    "401": {
+                        "description": "Unathorized"
+                    }
+                }
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Endpoint ini untuk mendapatkan data user yang sedang login",
+                "operationId": "7479d1e3fef943aefe451a83dc79b6b4",
+                "responses": {
+                    "200": {
+                        "description": "Akan memberikan data user yang sedang login"
+                    },
+                    "403": {
+                        "description": "Belum melakukan login"
+                    },
+                    "401": {
+                        "description": "Unathorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Endpoint ini untuk logout user yang sedang login",
+                "operationId": "caa5de44404b121464ac2da7c9b07744",
+                "responses": {
+                    "200": {
+                        "description": "Akan memberikan pesan berhasil logout"
+                    },
+                    "403": {
+                        "description": "Belum melakukan login"
+                    },
+                    "401": {
+                        "description": "Unathorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Endpoint ini untuk mendapatkan token baru user yang sedang login",
+                "operationId": "fc1300d3fa82c41745015d1a0ec67de5",
+                "responses": {
+                    "200": {
+                        "description": "Akan memberikan token baru"
+                    },
+                    "403": {
+                        "description": "Belum melakukan login"
+                    },
+                    "401": {
+                        "description": "Unathorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Endpoint ini untuk registrasi akun baru",
+                "operationId": "17736d4f36a850c7df6b6781f5afd6b1",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "value harus berupa email address",
+                                        "type": "email",
+                                        "example": "maszahid1@gmail.com"
+                                    },
+                                    "password": {
+                                        "description": "Minimal 7 karakte, harus terdapat huruf kecil dan besar, angka dan simbol",
+                                        "type": "string",
+                                        "example": "Abcdefg1!"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "password konfirmasi harus sama",
+                                        "type": "string",
+                                        "example": "Abcdefg1!"
+                                    },
+                                    "firstname": {
+                                        "description": "nama depan",
+                                        "type": "string",
+                                        "example": "Alexander"
+                                    },
+                                    "lastname": {
+                                        "description": "nama belakang",
+                                        "type": "string",
+                                        "example": "Graham Bell"
+                                    },
+                                    "bank_name": {
+                                        "description": "Nama Bank yang akan didaftarkan",
+                                        "type": "string",
+                                        "example": "BCA/BNI/BRI"
+                                    },
+                                    "rekening": {
+                                        "description": "Nomor Rekening",
+                                        "type": "integer",
+                                        "example": "57998977"
+                                    },
+                                    "saldo": {
+                                        "description": "Setoran Pertama, minimal Rp50.000",
+                                        "type": "integer",
+                                        "example": "50000"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "email": "testing@example.net",
+                                    "password": "Password2!",
+                                    "password_confirmation": "Password2!",
+                                    "firstname": "Alexander",
+                                    "lastname": "Graham Bell",
+                                    "bank_name": "BCA",
+                                    "rekening": 57998977,
+                                    "saldo": 50000
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Akan memberikan data user yang sudah terdaftar dan pesan berhasil mendaftar"
+                    },
+                    "422": {
+                        "description": "Some variable is required"
+                    },
+                    "403": {
+                        "description": "duplicate entry"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/logic-test-containers": {
+            "post": {
+                "tags": [
+                    "Logic Test Container"
+                ],
+                "summary": "Endpoint ini untuk soal logika test penempatan kontainer",
+                "operationId": "f295907914300e44aec1bdc142fc21ed",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "containers[]": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "int"
+                                        }
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "containers": [
+                                        1234567,
+                                        "0123456",
+                                        1234547
+                                    ]
+                                }
+                            }
+                        },
+                        "multipart/data-form": {
+                            "schema": {
+                                "properties": {
+                                    "containers[]": {
+                                        "type": "integer",
+                                        "example": 1234547
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Akan mengembalikan nilai antara LEFT, RIGHT, CENTER, DEAD"
+                    },
+                    "422": {
+                        "description": "containers[] value tidak sesuai dengan ketentuan"
+                    }
+                }
+            }
+        },
+        "/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Endpoint ini untuk mendapatkan token lupa password",
+                "operationId": "a1fca6b1d9516ba1e0c1809f0e5f6b10",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "email yang terdaftar",
+                                        "type": "email",
+                                        "example": "ybrakus@example.net"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "email": "ybrakus@example.net"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Akan memberikan token lupa password"
+                    },
+                    "201": {
+                        "description": "Email tidak ditemukan"
+                    },
+                    "422": {
+                        "description": "Some variable is required"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/update-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Endpoint ini untuk mengubah password",
+                "operationId": "df941cb39cf0489e89aadeed17279de4",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "_method": {
+                                        "description": "property untuk mengizinkan menggunakan method PUT",
+                                        "type": "string",
+                                        "example": "put"
+                                    },
+                                    "email": {
+                                        "description": "email yang terdaftar",
+                                        "type": "email",
+                                        "example": "ybrakus@example.net"
+                                    },
+                                    "token": {
+                                        "description": "token yang didapat ketika melakukan lupa password",
+                                        "type": "string",
+                                        "example": "kjabkdaisdgihiaushd"
+                                    },
+                                    "password": {
+                                        "description": "Password baru, terdiri dari minimal 7 karakter, huruf besar dan kecil, angka dan simbol, dan bukan password yang sudah digunakan sebelumnya",
+                                        "type": "password",
+                                        "example": "Password3!"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "ulangi password",
+                                        "type": "password",
+                                        "example": "Password3!"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "_method": "PUT",
+                                    "email": "ybrakus@example.net",
+                                    "token": "asdasdasdadasda",
+                                    "password": "Password3!",
+                                    "password_confirmation": "Password3!"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Akan memberikan pesan berhasil mengubah password"
+                    },
+                    "201": {
+                        "description": "Password gagal diubah/ password sudah pernah digunakan"
+                    },
+                    "422": {
+                        "description": "Some variable is required"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/transactions/mutation": {
+            "get": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Endpoint ini untuk laporan mutasi dalam periode waktu maks 30 hari",
+                "operationId": "52eaf6b7806f7866d1f192c767f59654",
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "tanggal awal periode mutasi",
+                        "schema": {
+                            "type": "date"
+                        },
+                        "example": "2022-02-05"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "batas periode mutasi maks 30 hari",
+                        "schema": {
+                            "type": "date"
+                        },
+                        "example": "2022-03-07"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Akan memberikan data transaksi sesuai periode yang ditentukan"
+                    },
+                    "422": {
+                        "description": "Some variable is required"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/transactions/topup": {
+            "post": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Endpoint ini untuk melakukan transaksi pengisian saldo rekening",
+                "operationId": "e2ae805072d21625b026f38dde8f36e3",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "description": {
+                                        "description": "deskripsi transaksi",
+                                        "type": "string",
+                                        "example": "topup dari OVO"
+                                    },
+                                    "amount": {
+                                        "description": "jumlah topup minimal Rp20.000",
+                                        "type": "integer",
+                                        "example": "30000"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "description": "topup dari OVO",
+                                    "amount": "50000"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Akan memberikan pesan berhasil melakukan transaksi"
+                    },
+                    "422": {
+                        "description": "Some variable is required"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/transactions/withdraw": {
+            "post": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Endpoint ini untuk melakukan transaksi penarikan/withdraw",
+                "operationId": "24142de781670e7a8981ec8cd516233b",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "description": {
+                                        "description": "deskripsi transaksi",
+                                        "type": "string",
+                                        "example": "tarik tunai"
+                                    },
+                                    "amount": {
+                                        "description": "jumlah penarikan minimal dan kelipatan Rp50.000",
+                                        "type": "integer",
+                                        "example": "30000"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "description": "tarik tunai",
+                                    "amount": "100000"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Akan memberikan pesan berhasil melakukan transaksi"
+                    },
+                    "422": {
+                        "description": "Some variable is required"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/transactions/transfer": {
+            "post": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Endpoint ini untuk melakukan transaksi transfer ke rekening yang terdafar",
+                "operationId": "495c14074088c5e340e483060a408d49",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "description": {
+                                        "description": "deskripsi transaksi",
+                                        "type": "string",
+                                        "example": "beli sepatu shopee"
+                                    },
+                                    "amount": {
+                                        "description": "jumlah transfer minimal Rp20.000",
+                                        "type": "integer",
+                                        "example": "30000"
+                                    },
+                                    "rekening": {
+                                        "description": "rekening tujuan yang terdafar",
+                                        "type": "integer",
+                                        "example": "57998977"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "description": "beli sepatu shopee",
+                                    "amount": "100000",
+                                    "rekening": 57998977
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Akan memberikan pesan berhasil melakukan transaksi"
+                    },
+                    "422": {
+                        "description": "Some variable is required"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "authentication"
+        },
+        {
+            "name": "Logic Test Container",
+            "description": "Logic Test Container"
+        },
+        {
+            "name": "Transaction",
+            "description": "Transaction, Transfer, Withdraw, Topup"
+        }
+    ],
+    "security": [
+        []
+    ]
+}
