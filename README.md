@@ -23,4 +23,4 @@ Project ini untuk soal soal technical test, yang terdapat fitur:
  - ketikkan perintah `php artisan migrate --seed` tekan enter, perintah ini untuk membuat table dari database dan generate user dari seeder
  - jika menggunakan XAMPP akses [http://localhost/nama_folder/api/documentation](http://localhost/nama_folder/api/documentation) untuk melihat dokumentasi API
  ## LIST API 
- <img src="" alt="API DOCUMENTATIOn">
+ <img src="https://github.com/chappie-chap/technical-test/blob/master/public/assets/documentation_api.png" alt="API DOCUMENTATIOn">
